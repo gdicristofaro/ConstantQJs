@@ -1,0 +1,181 @@
+import ConstantQData from './ConstantQData';
+import ConstantQ from './ConstantQ';
+import Complex from './Complex';
+import { Subject, Observable } from 'rxjs';
+
+/**
+ * the return message type along with data
+ */
+export type ConstantQMessage = 
+    // completion is [0,1] and displays as a percentage
+    {status: 'Loading', message: string, completion?: number } |
+    {status: 'Complete', data: ConstantQData } |
+    {status: 'Error', message: string }
+
+/**
+ * utilities for generating Constant Q data for an entire song
+ */
+export default class ConstantQDataUtil {
+    // how often user will get updates
+    static readonly PERCENTAGE_INCREMENTS = 5;
+
+    /**
+     * creates constant q data by sending and receiving data from
+     * wasm worker
+     * 
+     * @param buffer    the buffer to analyze
+     * @param minFreq   the minimum frequency to utilize in constant q
+     * @param maxFreq   the maximum frequency to utilize in constant q
+     * @param bins      the number of bins
+     * @param thresh    the threshold for constant q
+     * @param sampleInterval        the number of analysis per second (default is 16)
+     * @returns         the generated ConstantQData subject which yields
+     *                  results like:
+     *                  {
+     *                      status: 'Error'|'Loading'|'Complete'
+     *                      message: string
+     *                      [completion?]: percentage complete
+     *                      [data?]: on complete, returns ConstantQData
+     *                  }
+     */
+    static messageProcessing(buffer: AudioBuffer,
+        minFreq: number = ConstantQ.DEFAULT_MIN_FREQ.frequency,
+        maxFreq: number = ConstantQ.DEFAULT_MAX_FREQ.frequency,
+        bins: number = ConstantQ.DEFAULT_BINS,
+        thresh: number = ConstantQ.DEFAULT_THRESH,
+        fps: number = 16) : Observable<ConstantQMessage> {
+
+        const subject = new Subject<ConstantQMessage>();
+
+        try {
+                
+            let amplitudeBuffer = new (<any> window).Module.VectorDouble();
+            for (let c = 0; c < buffer.numberOfChannels; c++) {
+                let floatData = buffer.getChannelData(c);
+                for (let i = 0; i < buffer.length; i++) {
+                    if (c == 0)
+                        amplitudeBuffer.push_back(floatData[i])
+                    else
+                        amplitudeBuffer[i] = amplitudeBuffer[i] + floatData[i];
+                }
+            }
+
+            let retArr = [];
+            let count = 0;
+            let totCount = 0;
+
+            let dataUpdate = (i,b,val) => {
+                while (retArr.length <= i)
+                    retArr[i] = [];
+
+                while (retArr[i].length < b)
+                    retArr.push(undefined);
+                
+                retArr[i][b] = val;
+            }
+
+            let statusUpdate = (status, num) => {
+                switch (status) {
+                    case 0: 
+                        subject.next({status:"Loading", message:"Calculating Sparse Kernel"});
+                        break;
+                    case 1: 
+                        totCount = num;
+                        subject.next({status:"Loading", message:"Parsing Constant Q Data", completion:0});
+                        break;
+                    case 2: 
+                        count += num;
+                        if (count >= totCount) {
+                            (<any> window).removeFunction(statusUpdate);
+                            (<any> window).removeFunction(dataUpdate);
+                            let constantqdata = new ConstantQData(retArr, 1/fps);
+                            subject.next({status:"Complete", data: constantqdata});
+                        }
+                        else {
+                            subject.next({status:"Loading", message:"Parsing Constant Q Data", completion:count / totCount});
+                        }
+                            
+                        break;
+                }
+            };
+
+            let statUpdateFunc = (<any> window).addFunction(statusUpdate, 'vii');
+            let dataUpdateFunc = (<any> window).addFunction(dataUpdate, 'viid');
+
+            (<any> window).Module.evaluate(
+                buffer.sampleRate, minFreq, maxFreq, bins, thresh, 
+                buffer.sampleRate / fps, 20, amplitudeBuffer, 
+                statUpdateFunc.toString(), dataUpdateFunc.toString());
+        }
+        catch (e) {
+            subject.next({status:"Error", message:e.toString()});
+        }
+        
+        return subject;
+    }
+
+
+
+
+
+    /**
+     * process an audio buffer and generate a ConstantQData object 
+     * representing all the audio data for song
+     * @param buffer    the buffer to analyze
+     * @param minFreq   the minimum frequency to utilize in constant q
+     * @param maxFreq   the maximum frequency to utilize in constant q
+     * @param bins      the number of bins
+     * @param thresh    the threshold for constant q
+     * @param sampleInterval        the number of frames between analysis 
+     *                              (if undefined use sparse kernel length)
+     * @returns         the generated ConstantQData
+     */
+    static process(buffer: AudioBuffer,
+        minFreq: number = ConstantQ.DEFAULT_MIN_FREQ.frequency,
+        maxFreq: number = ConstantQ.DEFAULT_MAX_FREQ.frequency,
+        bins: number = ConstantQ.DEFAULT_BINS,
+        thresh: number = ConstantQ.DEFAULT_THRESH,
+        sampleInterval: number = undefined) {
+            
+        // create the sparse kernel
+        const sparseKernel = ConstantQ.sparseKernel(
+            buffer.sampleRate, minFreq, maxFreq, bins, thresh);
+
+        if (!sampleInterval)
+            sampleInterval = sparseKernel.size;
+            
+        // create a buffer to hold amplitude data from the audio buffer
+        const complexBuff = new Array<Complex>(sparseKernel.size);
+
+        // get basic information about the audio like number of channels and length of audio
+        const channels = buffer.numberOfChannels;
+        const bufferLength = buffer.getChannelData(0).length;
+
+        // the constant q data
+        const constantQData = new Array<Array<number>>();
+
+        // the current start position within
+        var bufferStartPos = 0;
+
+        // iterate through audio buffer and determine constant q data
+        while (bufferStartPos + sparseKernel.size  <= bufferLength) {
+            for (let c = 0; c < channels; c++) {
+                const bufferData = buffer.getChannelData(c);
+
+                for (let i = 0; i < complexBuff.length; i++) {
+                    if (c === 0)
+                        complexBuff[i] = new Complex(bufferData[bufferStartPos + i] / channels, 0);
+                    else
+                        complexBuff[i] = complexBuff[i].add(new Complex(bufferData[bufferStartPos + i] / channels, 0));
+                }
+            }
+
+            constantQData.push(ConstantQ.constantQ(complexBuff, sparseKernel).map(c => c.abs()));
+
+            bufferStartPos += sampleInterval;
+        }
+
+        // return the pertinent constant q data
+        return new ConstantQData(constantQData, sampleInterval / buffer.sampleRate);
+    }
+}

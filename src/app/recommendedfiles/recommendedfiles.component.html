@@ -1,0 +1,8 @@
+<div>
+    <h4>Recommended Files</h4>
+    <a href="#" *ngFor="let item of items; trackBy: itemId" (click)="onClick(item)">
+        <span class="ml-1 mr-1 badge badge-primary">
+            {{ format(item) }}
+        </span>
+    </a>
+</div>
