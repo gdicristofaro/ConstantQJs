@@ -6,6 +6,15 @@
   <base href="/">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- to handle loading constantq wasm module -->
+  <script>
+      var Module = {
+        onRuntimeInitialized: function () {
+          window.Module = Module;
+        }
+      };
+    </script>
+  <script src="./assets/wasm/constantq.js"></script>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>

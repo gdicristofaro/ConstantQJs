@@ -180,7 +180,7 @@ extern "C" {
             EM_ASM({ console.log("sparse kernel audio data at", $0, $1)}, i, data[i]);
         #endif
 
-        worker_handle worker = emscripten_create_worker("/assets/worker.js");
+        worker_handle worker = emscripten_create_worker("./assets/wasm/worker.js");
 
         // initialize sparse Kernel
         SparseKernelWorkerArgs sparseKernelArgs;

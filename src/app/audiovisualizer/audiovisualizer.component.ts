@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { BaseChartDirective } from 'ng2-charts';
-import { ChartType } from 'chart.js';
+import { BaseChartDirective, Color } from 'ng2-charts';
+import { ChartType, ChartDataSets, ChartOptions } from 'chart.js';
 
 /**
  * responsible for visualizing spectral audio data
@@ -14,7 +14,7 @@ export class AudioVisualizerComponent implements OnInit {
   @Input() title: string = undefined;
 
   // the category axis labels
-  @Input() pitches: Array<any> = undefined;
+  @Input() pitches = undefined;
 
   @ViewChild("baseChart") chart: BaseChartDirective;
 
@@ -35,7 +35,7 @@ export class AudioVisualizerComponent implements OnInit {
   // redraw via: https://github.com/valor-software/ng2-charts/issues/806
   reloadChart(newMax: number) {
     if (this.chart !== undefined && this.chart.chart) {
-      this.chart.chart.destroy();
+      //this.chart.chart.destroy();
       //this.chart.chart = 0;
 
       this.chart.datasets = this.chartData;
@@ -70,7 +70,7 @@ export class AudioVisualizerComponent implements OnInit {
   private destArr: number[];
 
   // displays the chart data on the table
-  get chartData(): any[] {
+  get chartData(): ChartDataSets[] {
     return [{ data: this.destArr }];
   }
 
@@ -87,7 +87,7 @@ export class AudioVisualizerComponent implements OnInit {
   }
 
   // chart.js options for display
-  get lineChartOptions(): any {
+  get lineChartOptions(): ChartOptions {
     return {
       responsive: true,
       scales: {
@@ -102,7 +102,7 @@ export class AudioVisualizerComponent implements OnInit {
   }
 
   // the colors for the chart
-  lineChartColors: Array<any> = [
+  lineChartColors: Color[] = [
     { // grey
       backgroundColor: 'rgba(148,159,177,0.2)',
       borderColor: 'rgba(148,159,177,1)',

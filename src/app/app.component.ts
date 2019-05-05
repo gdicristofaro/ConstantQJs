@@ -50,7 +50,7 @@ export class AppComponent implements OnInit {
   get noteLetters() {
     const min = ConstantQ.DEFAULT_MIN_FREQ;
     const max = ConstantQ.DEFAULT_MAX_FREQ;
-    const lst = getFreqRange(min.note, min.octave, max.note, max.octave)
+    const lst : string[] = getFreqRange(min.note, min.octave, max.note, max.octave)
       .map(n => `${noteToString(n.note)}${n.octave}`)
       .reduce((lst, cur) => lst.concat(cur, ""), []);
 
@@ -159,8 +159,15 @@ export class AppComponent implements OnInit {
       this.audioLoadSub = audioBuffer.pipe(
         mergeMap(buffer => ConstantQDataUtil.messageProcessing(buffer)
           .pipe(map(message => {return {buffer, message}; })))
-        ).subscribe((data => 
-          this.onConstantQMsg(data.message, data.buffer)));
+        ).subscribe(data => this.onConstantQMsg(data.message, data.buffer),
+        err => {
+          console.error(err);
+          this.loadingMessage = undefined;
+          this.loadingPercentage = undefined;
+
+          if (this.loadingModal)
+            this.loadingModal.close("dismiss");
+        });
     }
   }
 

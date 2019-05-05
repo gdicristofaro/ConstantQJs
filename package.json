@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build && npm run buildwasm",
+    "buildwasm": "node ./buildWasm.js",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -21,10 +22,10 @@
     "@angular/router": "~7.2.0",
     "@ng-bootstrap/ng-bootstrap": "^4.1.2",
     "bootstrap": "^4.3.1",
-    "chart.js": "^2.8.0",
+    "chart.js": "^2.7.2",
     "core-js": "^2.5.4",
     "jquery": "^3.4.1",
-    "ng2-charts": "^2.2.3",
+    "ng2-charts": "^1.6.0",
     "ngx-dropzone": "^1.1.5",
     "numeral": "^2.0.6",
     "rxjs": "~6.5.1",

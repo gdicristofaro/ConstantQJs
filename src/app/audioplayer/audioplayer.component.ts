@@ -15,6 +15,16 @@ export class AudioPlayerComponent implements OnInit {
         return this.playback.isPlaying
     }
 
+    get curPosition() {
+        return (this.playback) ? this.playback.currentPosition : undefined;
+    }
+
+    set curPosition(value) {
+        console.log("setting current position");
+        if (this.playback)
+            this.playback.currentPosition = value;
+    }
+
     ngOnInit(): void { }
 
     @Input() playback: AudioPlayback;

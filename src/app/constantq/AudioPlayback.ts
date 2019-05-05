@@ -6,10 +6,16 @@ import { mergeMap } from 'rxjs/operators';
  * A class that defines playback and playback controls for an audio file
  */
 export default class AudioPlayback {
+    static _audioContext : AudioContext = undefined;
     /**
      * defines the audio context to use for audio playback
      */
-    static audioCtx = new AudioContext();
+    static get audioCtx() {
+        if (!AudioPlayback._audioContext)
+            AudioPlayback._audioContext = new AudioContext();
+
+        return AudioPlayback._audioContext;
+    } 
 
     /**
      * defines the default refresh rate for an fft window in milliseconds
@@ -137,6 +143,7 @@ export default class AudioPlayback {
      * sets the current position for playback
      */
     set currentPosition(value: number) {
+        console.log(`seeking ${value}`);
         this.seek(value);
     }
 
