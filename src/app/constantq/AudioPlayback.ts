@@ -143,7 +143,6 @@ export default class AudioPlayback {
      * sets the current position for playback
      */
     set currentPosition(value: number) {
-        console.log(`seeking ${value}`);
         this.seek(value);
     }
 

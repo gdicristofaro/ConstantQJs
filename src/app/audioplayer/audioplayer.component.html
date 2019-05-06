@@ -1,6 +1,6 @@
 <div>
     <input class="form-control" type="range" min="0" [max]="playback.duration" 
-        [(value)]="curPosition" step="0.1" />
+        [value]="curPosition" (input)="setCurPosition($event)" step="0.1" />
     <button class="btn btn-primary" (click)="togglePlay()">{{ isPlaying ? "Pause" : "Play" }}</button>
     <div>
         {{curPosition | playTime }} / {{playback.duration | playTime }}
