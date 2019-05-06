@@ -13,6 +13,7 @@ import { FileSelectorComponent } from './fileselector/fileselector.component';
 import { RecommendedFilesComponent } from './recommendedfiles/recommendedfiles.component';
 import { PlayTimePipe } from './playtime.pipe';
 import { MegabytesPipe } from './megabytes.pipe';
+import { UrlSelectorComponent } from './urlselector/urlselector.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { MegabytesPipe } from './megabytes.pipe';
     FileSelectorComponent,
     RecommendedFilesComponent,
     PlayTimePipe,
-    MegabytesPipe
+    MegabytesPipe,
+    UrlSelectorComponent
   ],
   imports: [
     BrowserModule,

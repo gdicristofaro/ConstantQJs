@@ -20,6 +20,29 @@ export default class ConstantQDataUtil {
     static readonly PERCENTAGE_INCREMENTS = 5;
 
     /**
+     * pads the processed info array so that all frames for the length of the song are covered
+     * (assume last frame will be copied for the length of the song)
+     * 
+     * @param retArr        the return array
+     * @param frameRate     length in seconds of frames in the array
+     * @param seconds       the total length of the song in seconds
+     * @return              the padded array
+     */
+    private static padAudioArray(retArr, frameRate, seconds) {
+        if (!retArr || !retArr.length)
+            return retArr;
+
+        let totalExpectedFrames = Math.ceil(seconds / frameRate);
+        let totalFrames = retArr.length;
+        let lastFrame = retArr[retArr.length - 1];
+        let paddedArr = [];
+        let paddedArrayNum = totalExpectedFrames - totalFrames;
+        for (let i = 0; i < paddedArrayNum; i++)
+            paddedArr.push(lastFrame);
+
+        return [...retArr, ...paddedArr];
+    }
+    /**
      * creates constant q data by sending and receiving data from
      * wasm worker
      * 
@@ -88,7 +111,10 @@ export default class ConstantQDataUtil {
                         if (count >= totCount) {
                             (<any> window).removeFunction(statusUpdate);
                             (<any> window).removeFunction(dataUpdate);
-                            let constantqdata = new ConstantQData(retArr, 1/fps);
+                            let paddedArr = ConstantQDataUtil.padAudioArray(
+                                                retArr, 1/fps, buffer.duration);
+
+                            let constantqdata = new ConstantQData(paddedArr, 1/fps);
                             subject.next({status:"Complete", data: constantqdata});
                         }
                         else {
