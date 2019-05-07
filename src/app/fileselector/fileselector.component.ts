@@ -25,10 +25,7 @@ export class FileSelectorComponent {
             const file = files[0];
             this.selectedFile.next({
                 file,
-                filename: file.name,
-                size: file.size,
-                type: file.type,
-                length: 0
+                filename: file.name
             });
         }
     }

@@ -1,8 +1,14 @@
 <div>
     <h4>Recommended Files</h4>
-    <a href="#" *ngFor="let item of items; trackBy: itemId" (click)="onClick(item)">
-        <span class="ml-1 mr-1 badge badge-primary">
+    <mat-chip-list>
+        <mat-chip 
+            class="link-chip"
+            color="primary" 
+            selected
+            *ngFor="let item of items; trackBy: itemId" 
+            (click)="onClick(item)"
+        >
             {{ format(item) }}
-        </span>
-    </a>
+        </mat-chip>
+    </mat-chip-list>
 </div>

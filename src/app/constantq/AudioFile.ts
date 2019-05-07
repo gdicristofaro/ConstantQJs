@@ -1,22 +1,26 @@
 import {MegabytesPipe} from '../megabytes.pipe';
 
+interface BaseAudioFile {
+    
+}
+
 /**
  * defines an audio file record with pertinent details gathered from archive.org
  */
-export default interface AudioFile {
-    // the url for the file
-    url?: string;
-    // if no url, use the file
-    file?: File
-    
+interface BaseAudioFile {  
     // the display file name
-    filename: string;
-    // the audio type
-    type: string;
+    filename?: string;
+
     // the file size
-    size: number;
-    length: number;
+    size?: number;
 }
+
+type FileSource = {file: File};
+type UrlSource = {url: string};
+export {FileSource, UrlSource};
+
+type AudioFile = (BaseAudioFile & FileSource) | (BaseAudioFile & UrlSource);
+export default AudioFile;
 
 
 const bytesPipe = new MegabytesPipe();

@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ChartsModule } from 'ng2-charts';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxDropzoneModule } from 'ngx-dropzone';
@@ -14,7 +13,8 @@ import { RecommendedFilesComponent } from './recommendedfiles/recommendedfiles.c
 import { PlayTimePipe } from './playtime.pipe';
 import { MegabytesPipe } from './megabytes.pipe';
 import { UrlSelectorComponent } from './urlselector/urlselector.component';
-
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatExpansionModule, MatCardModule, MatChipsModule} from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -29,11 +29,14 @@ import { UrlSelectorComponent } from './urlselector/urlselector.component';
   ],
   imports: [
     BrowserModule,
-    NgbModule,
     ChartsModule,
     FormsModule,
     HttpClientModule,
-    NgxDropzoneModule
+    NgxDropzoneModule,
+    BrowserAnimationsModule,
+    MatExpansionModule,
+    MatCardModule,
+    MatChipsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

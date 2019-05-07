@@ -1,36 +1,77 @@
+<h1>Constant-Q Music Transform</h1>
+<mat-expansion-panel [expanded]="true">
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      This is the expansion title
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8 p-2">
+        <div class="row">
+          <div class="col-md-12">
+            <recommended-files [selectedFile]="selectedFile"></recommended-files>
+          </div>
+          <div class="col-md-12">
+            <url-selector [selectedFile]="selectedFile"></url-selector>
+          </div>
+          <div class="col-md-12">
+            <file-selector [selectedFile]="selectedFile"></file-selector>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 p-2">
+        <mat-card>
+          <mat-card-title>Settings</mat-card-title>
+          <mat-card-content>
+            The settings...
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</mat-expansion-panel>
+
+
 <div style="text-align:center">
-    <!-- the actual bootstrap modal -->
-    <ng-template #modal let-modal>
-      <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Loading...</h4>
+  <!-- the actual bootstrap modal -->
+  <ng-template #modal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Loading...</h4>
+    </div>
+    <div class="modal-body">
+      <div>{{loadingMessage}}</div>
+      <h4 *ngIf="loadingPercentage">{{loadingPercentage | percent}}</h4>
+    </div>
+  </ng-template>
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- shows recommended files -->
+      <div class="col-md-12 mb-3">
+        <recommended-files [selectedFile]="selectedFile"></recommended-files>
       </div>
-      <div class="modal-body">
-        <div>{{loadingMessage}}</div>
-        <h4 *ngIf="loadingPercentage">{{loadingPercentage | percent}}</h4>
+    </div>
+    <div class="row">
+      <!-- shows url files -->
+      <div class="col-md-12 mb-3">
+        <url-selector [selectedFile]="selectedFile"></url-selector>
       </div>
-    </ng-template>
-  
-    <div class="container-fluid">
-      <div class="row">
-        <!-- shows recommended files -->
-        <div class="col-md-12 mb-3">
-          <recommended-files [selectedFile]="selectedFile"></recommended-files>
-        </div>
+    </div>
+    <div class="row mb-5">
+      <div class="col-0 col-md-3"></div>
+      <div class="col-12 col-md-6 pl-5 pr-5">
+        <file-selector [selectedFile]="selectedFile"></file-selector>
       </div>
-      <div class="row mb-5">
-        <div class="col-0 col-md-3"></div>
-        <div class="col-12 col-md-6 pl-5 pr-5">
-          <file-selector [selectedFile]="selectedFile"></file-selector>
-        </div>
-        <div class="col-0 col-md-3"></div>
-      </div>
-      <div class="row">
+      <div class="col-0 col-md-3"></div>
+    </div>
+    <div class="row">
       <!-- if controls should be shown (i.e. an audio file has been selected), 
         visualizes the music -->
-        <div *ngIf="showControls" class="col-md-12 pl-5 pr-5">
-          <audio-visualizer [title]="title" [pitches]="noteLetters" [pitchData]="curPitches" [max]="graphMax">
-          </audio-visualizer>
-        </div>
+      <div *ngIf="showControls" class="col-md-12 pl-5 pr-5">
+        <audio-visualizer [title]="title" [pitches]="noteLetters" [pitchData]="curPitches" [max]="graphMax">
+        </audio-visualizer>
+      </div>
       <!-- if controls should be shown (i.e. an audio file has been selected), 
         provides playback for the audio file -->
       <div *ngIf="showControls" class="col-md-12 pl-5 pr-5">

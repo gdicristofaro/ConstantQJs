@@ -3,7 +3,7 @@ import AudioPlayback from './constantq/AudioPlayback';
 import { BehaviorSubject, Subscription, of } from 'rxjs';
 import { map, tap, mergeMap, catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import AudioFile from './constantq/AudioFile';
+import AudioFile, { FileSource, UrlSource } from './constantq/AudioFile';
 import { getFreqRange, Note, noteToString } from './constantq/Pitch';
 import ConstantQData from './constantq/ConstantQData';
 import ConstantQDataUtil, {ConstantQMessage} from './constantq/ConstantQDataUtil';
@@ -140,7 +140,7 @@ export class AppComponent implements OnInit {
    */
   onFileChange(file: AudioFile) {
     // if an actual file, load it and set as playback
-    if (file && (file.url || file.file) && !this.audioLoadSub) {
+    if (file && ((<UrlSource> file).url || (<FileSource> file).file) && !this.audioLoadSub) {
       // pause playback if exists (to avoid playback issues)
       if (this.playback)
         this.playback.pause();
@@ -152,9 +152,9 @@ export class AppComponent implements OnInit {
       this.loadingModal = this.modalService.open(this.modal, 
         { backdrop: 'static', keyboard: false });
 
-      const audioBuffer = (file.file) ?
-        AudioPlayback.getFileBufferNode(file.file) :
-        AudioPlayback.getHttpBufferNode(this.http, file.url);
+      const audioBuffer = (<FileSource> file).file ?
+        AudioPlayback.getFileBufferNode((<FileSource> file).file) :
+        AudioPlayback.getHttpBufferNode(this.http, (<UrlSource> file).url);
         
       this.audioLoadSub = audioBuffer.pipe(
         mergeMap(buffer => ConstantQDataUtil.messageProcessing(buffer)
