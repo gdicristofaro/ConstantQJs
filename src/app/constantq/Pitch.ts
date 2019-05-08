@@ -39,6 +39,24 @@ export const noteToString = (note: Note) => {
   }
 }
 
+export const stringToNote = (nt: string) => {
+  switch (nt) {
+    case "C": return Note.C;
+    case "C#": return Note.CSharp;
+    case "D": return Note.D;
+    case "D#": return Note.DSharp;
+    case "E": return Note.E;
+    case "F": return Note.F;
+    case "F#": return Note.FSharp;
+    case "G": return Note.G;
+    case "G#": return Note.GSharp;
+    case "A": return Note.A;
+    case "A#": return Note.ASharp;
+    case "B": return Note.B;
+    default: throw `unknown note: ${nt}`;
+  }
+}
+
 /**
  * gets pertinent pitch data given the note and octave
  * @param note    the note 
@@ -70,6 +88,12 @@ export const getFreqRange = (note1: Note, octave1: number, note2: Note, octave2:
   return PitchData.slice(index1, index2 + 1);
 }
 
+
+export type Pitch = {
+  note: Note,
+  octave: number,
+  frequency: number
+};
 
 /**
  * array of records pertaining to pitch and frequency dates

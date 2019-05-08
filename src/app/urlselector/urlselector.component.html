@@ -1,11 +1,16 @@
 <div class="row">
+  <div class="col-12">
+    <h5>Choose a URL</h5>
+  </div>
   <div class="col-12 d-flex">
     <div class="flex-grow-1">
-      <label class="form-control-label" for="url-entry">URL</label>
-      <input [value]="url" (keyup)="onKey($event)" id="url-entry" class="form-control" type="text"/>
+      <mat-form-field class="w-100 pr-2">
+        <input matInput placeholder="URL" value="" class="w-100 pl-2"
+          [value]="url" (keyup)="onKey($event)" type="text"/>
+      </mat-form-field>
     </div>
     <div>
-      <button class="btn btn-primary" (click)="load()">Load</button>
+      <button mat-raised-button color="primary" (click)="load()">Load</button>
     </div>
   </div>
 </div>

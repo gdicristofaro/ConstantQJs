@@ -14,7 +14,9 @@ import { PlayTimePipe } from './playtime.pipe';
 import { MegabytesPipe } from './megabytes.pipe';
 import { UrlSelectorComponent } from './urlselector/urlselector.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MatExpansionModule, MatCardModule, MatChipsModule} from '@angular/material';
+import {MatExpansionModule, MatCardModule, MatChipsModule, MatButtonModule,MatInputModule,MatSelectModule} 
+  from '@angular/material';
+import { SettingsComponent } from './settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,8 @@ import {MatExpansionModule, MatCardModule, MatChipsModule} from '@angular/materi
     RecommendedFilesComponent,
     PlayTimePipe,
     MegabytesPipe,
-    UrlSelectorComponent
+    UrlSelectorComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -36,7 +39,10 @@ import {MatExpansionModule, MatCardModule, MatChipsModule} from '@angular/materi
     BrowserAnimationsModule,
     MatExpansionModule,
     MatCardModule,
-    MatChipsModule
+    MatChipsModule,
+    MatButtonModule,
+    MatInputModule,
+    MatSelectModule
   ],
   providers: [],
   bootstrap: [AppComponent]
