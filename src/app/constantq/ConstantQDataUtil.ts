@@ -66,7 +66,7 @@ export default class ConstantQDataUtil {
         maxFreq: number = ConstantQ.DEFAULT_MAX_FREQ.frequency,
         bins: number = ConstantQ.DEFAULT_BINS,
         thresh: number = ConstantQ.DEFAULT_THRESH,
-        fps: number = 16) : Observable<ConstantQMessage> {
+        fps: number = ConstantQ.DEFAULT_FPS) : Observable<ConstantQMessage> {
 
         const subject = new Subject<ConstantQMessage>();
 

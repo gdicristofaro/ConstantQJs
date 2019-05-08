@@ -4,12 +4,11 @@ import { BehaviorSubject, Subscription, of } from 'rxjs';
 import { map, tap, mergeMap, catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import AudioFile, { FileSource, UrlSource } from './constantq/AudioFile';
-import { getFreqRange, Note, noteToString } from './constantq/Pitch';
+import { getFreqRange, Note, noteToString, Pitch } from './constantq/Pitch';
 import ConstantQData from './constantq/ConstantQData';
 import ConstantQDataUtil, {ConstantQMessage} from './constantq/ConstantQDataUtil';
 import ConstantQ from './constantq/ConstantQ';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-
 
 /**
  * This is the main entry point angular component.  This component is
@@ -35,6 +34,12 @@ export class AppComponent implements OnInit {
   selectedSub: Subscription;
   title: string = undefined;
 
+  settingsExpand = true;
+
+  minPitch : Pitch = ConstantQ.DEFAULT_MIN_FREQ;
+  maxPitch : Pitch = ConstantQ.DEFAULT_MAX_FREQ;
+  fps : number = ConstantQ.DEFAULT_FPS;
+
   /**
    * whether or not to show controls
    * @returns true if there is a playback component that has audio
@@ -42,6 +47,10 @@ export class AppComponent implements OnInit {
   get showControls() {
     return (this.playback && this.playback.hasSource);
   }
+
+  onMinPitch(min:Pitch) { this.minPitch = min; }
+  onMaxPitch(max:Pitch) { this.maxPitch = max; }
+  onFps(fps:number) { this.fps = fps; }
 
 
   /**
@@ -74,6 +83,7 @@ export class AppComponent implements OnInit {
    */
   private onFinishedLoading(buff: AudioBuffer, pitchData: ConstantQData) {
     this.playback = new AudioPlayback(buff, AppComponent.MS_REFRESH);
+    this.settingsExpand = false;
 
     if (pitchData) {
       // determine max value for graph
@@ -157,7 +167,9 @@ export class AppComponent implements OnInit {
         AudioPlayback.getHttpBufferNode(this.http, (<UrlSource> file).url);
         
       this.audioLoadSub = audioBuffer.pipe(
-        mergeMap(buffer => ConstantQDataUtil.messageProcessing(buffer)
+        mergeMap(buffer => ConstantQDataUtil.messageProcessing(buffer, 
+            this.minPitch.frequency, this.maxPitch.frequency, 
+            ConstantQ.DEFAULT_BINS, ConstantQ.DEFAULT_THRESH, this.fps)
           .pipe(map(message => {return {buffer, message}; })))
         ).subscribe(data => this.onConstantQMsg(data.message, data.buffer),
         err => {

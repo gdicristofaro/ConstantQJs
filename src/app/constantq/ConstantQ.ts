@@ -167,6 +167,8 @@ export default class ConstantQ {
     // http://doc.ml.tu-berlin.de/bbci/material/publications/Bla_constQ.pdf
     static DEFAULT_THRESH = 0.0054;
 
+    static DEFAULT_FPS = 16;
+
     // the default number of bins (12 pitches in an octave multiplied by 2 for accuracy)
     static DEFAULT_BINS = 24;
     

@@ -21,7 +21,7 @@ export class AudioPlayerComponent implements OnInit {
 
     setCurPosition(e) {
         if (this.playback)
-            this.playback.currentPosition = e.target.value;
+            this.playback.currentPosition = e.value;
     }
 
     ngOnInit(): void { }
