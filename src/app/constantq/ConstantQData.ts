@@ -1,3 +1,5 @@
+import { Pitch } from './Pitch';
+
 /**
  * holds constant q data for an entire song
  */
@@ -11,7 +13,9 @@ export default class ConstantQData {
      */
     constructor(
         public readonly constQData : number[][], 
-        public readonly secResolution: number) {}
+        public readonly secResolution: number,
+        public readonly lowPitch: Pitch,
+        public readonly highPitch: Pitch) {}
 
     /**
      * gets the constant q data for the second position provided

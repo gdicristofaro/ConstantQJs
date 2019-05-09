@@ -3,7 +3,6 @@
 #include "SparseKernel.hpp"
 #include "ConstantQSession.hpp"
 #include <cmath>
-
 //#include <emscripten/bind.h>
 
 using namespace std;
@@ -68,9 +67,11 @@ namespace constantq {
                         int startFrame, int frameInterval, int totalAnalyses) {
         
         assert(startFrame >= 0);
-        assert(data.size() >= startFrame + frameInterval * totalAnalyses);
 
         auto kernelLen = _cachedKernel.size();
+
+        assert(data.size() >= startFrame + kernelLen + frameInterval * (totalAnalyses - 1));
+
 
         // buffers to minimize memory allocation and deallocation
         vector<complex<double> > bufferInput(kernelLen);
@@ -90,19 +91,5 @@ namespace constantq {
             
         return toRet;
     }
-
-    // EMSCRIPTEN_BINDINGS(stl_wrappers) {
-    //     emscripten::register_vector<double>("VectorDouble");
-    //     emscripten::register_vector<std::vector<double>>("VectorVectorDouble");
-    // }
-
-    // EMSCRIPTEN_BINDINGS(ConstantQSession) {
-    //     emscripten::class_<ConstantQSession>("ConstantQSession")
-    //         .constructor<int, double, double, int, double>()
-    //         .function("bins", &ConstantQSession::bins)
-    //         .function("size", &ConstantQSession::size)
-    //         .function("analyze", &ConstantQSession::analyze, emscripten::allow_raw_pointers())
-    //         ;
-    // }
 }
 

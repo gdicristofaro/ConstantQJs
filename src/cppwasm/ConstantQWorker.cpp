@@ -3,7 +3,6 @@
 #include <optional>
 #include "WorkerArgs.hpp"
 
-
 using namespace std;
 
 extern "C" {

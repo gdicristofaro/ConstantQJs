@@ -2,6 +2,7 @@ import ConstantQData from './ConstantQData';
 import ConstantQ from './ConstantQ';
 import Complex from './Complex';
 import { Subject, Observable } from 'rxjs';
+import { Pitch } from './Pitch';
 
 /**
  * the return message type along with data
@@ -62,8 +63,8 @@ export default class ConstantQDataUtil {
      *                  }
      */
     static messageProcessing(buffer: AudioBuffer,
-        minFreq: number = ConstantQ.DEFAULT_MIN_FREQ.frequency,
-        maxFreq: number = ConstantQ.DEFAULT_MAX_FREQ.frequency,
+        minPitch: Pitch = ConstantQ.DEFAULT_MIN_FREQ,
+        maxPitch: Pitch = ConstantQ.DEFAULT_MAX_FREQ,
         bins: number = ConstantQ.DEFAULT_BINS,
         thresh: number = ConstantQ.DEFAULT_THRESH,
         fps: number = ConstantQ.DEFAULT_FPS) : Observable<ConstantQMessage> {
@@ -114,7 +115,7 @@ export default class ConstantQDataUtil {
                             let paddedArr = ConstantQDataUtil.padAudioArray(
                                                 retArr, 1/fps, buffer.duration);
 
-                            let constantqdata = new ConstantQData(paddedArr, 1/fps);
+                            let constantqdata = new ConstantQData(paddedArr, 1/fps, minPitch, maxPitch);
                             subject.next({status:"Complete", data: constantqdata});
                         }
                         else {
@@ -129,7 +130,7 @@ export default class ConstantQDataUtil {
             let dataUpdateFunc = (<any> window).addFunction(dataUpdate, 'viid');
 
             (<any> window).Module.evaluate(
-                buffer.sampleRate, minFreq, maxFreq, bins, thresh, 
+                buffer.sampleRate, minPitch.frequency, maxPitch.frequency, bins, thresh, 
                 buffer.sampleRate / fps, 20, amplitudeBuffer, 
                 statUpdateFunc.toString(), dataUpdateFunc.toString());
         }
@@ -157,15 +158,15 @@ export default class ConstantQDataUtil {
      * @returns         the generated ConstantQData
      */
     static process(buffer: AudioBuffer,
-        minFreq: number = ConstantQ.DEFAULT_MIN_FREQ.frequency,
-        maxFreq: number = ConstantQ.DEFAULT_MAX_FREQ.frequency,
+        minPitch: Pitch = ConstantQ.DEFAULT_MIN_FREQ,
+        maxPitch: Pitch = ConstantQ.DEFAULT_MAX_FREQ,
         bins: number = ConstantQ.DEFAULT_BINS,
         thresh: number = ConstantQ.DEFAULT_THRESH,
         sampleInterval: number = undefined) {
             
         // create the sparse kernel
         const sparseKernel = ConstantQ.sparseKernel(
-            buffer.sampleRate, minFreq, maxFreq, bins, thresh);
+            buffer.sampleRate, minPitch.frequency, maxPitch.frequency, bins, thresh);
 
         if (!sampleInterval)
             sampleInterval = sparseKernel.size;
@@ -202,6 +203,7 @@ export default class ConstantQDataUtil {
         }
 
         // return the pertinent constant q data
-        return new ConstantQData(constantQData, sampleInterval / buffer.sampleRate);
+        return new ConstantQData(constantQData, sampleInterval / buffer.sampleRate, 
+            minPitch, maxPitch);
     }
 }

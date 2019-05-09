@@ -117,6 +117,8 @@ extern "C" {
             int endingSample = ceil(((((double)w) + 1) / workerNumber) * sampleNum);
 
             int totalSamples = endingSample - startSample; 
+            if (totalSamples < 1)
+                continue;
 
             ConstantQHeaderArgs theseArgs;
             theseArgs.frameInterval = frameInterval;

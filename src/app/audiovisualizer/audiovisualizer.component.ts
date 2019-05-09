@@ -13,8 +13,18 @@ import { ChartType, ChartDataSets, ChartOptions } from 'chart.js';
 export class AudioVisualizerComponent implements OnInit {
   @Input() title: string = undefined;
 
+  _pitches = undefined;
+
   // the category axis labels
-  @Input() pitches = undefined;
+  @Input() 
+  set pitches(value: string[]) {
+    this._pitches = value;
+    this.reloadChart()
+  }
+
+  get pitches() {
+    return this._pitches;
+  }
 
   @ViewChild("baseChart") chart: BaseChartDirective;
 
@@ -29,14 +39,14 @@ export class AudioVisualizerComponent implements OnInit {
   @Input('max')
   set max(value: number) {
     this._max = value;
-    this.reloadChart(value);
+    this.reloadChart();
   }
 
   // redraw via: https://github.com/valor-software/ng2-charts/issues/806
-  reloadChart(newMax: number) {
+  reloadChart() {
     if (this.chart !== undefined && this.chart.chart) {
-      //this.chart.chart.destroy();
-      //this.chart.chart = 0;
+      this.chart.chart.destroy();
+      this.chart.chart = 0;
 
       this.chart.datasets = this.chartData;
       this.chart.labels = this.pitches;
@@ -47,7 +57,7 @@ export class AudioVisualizerComponent implements OnInit {
           yAxes: [{
             ticks: {
               min: 0,
-              max: newMax
+              max: this.max
             }
           }]
         }
@@ -101,6 +111,7 @@ export class AudioVisualizerComponent implements OnInit {
     };
   }
 
+  
   // the colors for the chart
   lineChartColors: Color[] = [
     { // grey
