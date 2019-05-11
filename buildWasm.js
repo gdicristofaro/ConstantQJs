@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path')
 
 
-const emcc = "/Users/gregdicristofaro/git/constantqwasm/emsdk/emscripten/1.38.30/emcc";
+const emcc = "emcc";
 const cppDir = '/src/cppwasm/';
 
 const wasmOutdir = '/src/assets/wasm';

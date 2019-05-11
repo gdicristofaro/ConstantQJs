@@ -62,7 +62,9 @@ export class SettingsComponent implements OnInit {
 
 
   onFpsKey(event) {
-    this.fps = Math.min(32, Math.max(1, Math.floor(event.target.value)));
+    let val = (event && event.target && event.target.value) ? event.target.value : 1; 
+    this.fps = Math.min(32, Math.max(1, Math.floor(val)));
+    console.log(this.fps);
     this.onFps.emit(this.fps);
   }
 

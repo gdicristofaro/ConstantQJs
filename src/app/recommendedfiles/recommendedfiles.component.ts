@@ -18,19 +18,14 @@ export class RecommendedFilesComponent {
             size: 1.8 * 1024 * 1024
         },
         {
-            filename: 'Prelude in E Minor',
-            url: 'https://archive.org/download/PeludiumEMollOp.28Nr.4largo/Peludium%20e-moll%20op.28%20nr.4%28largo%29.mp3',
-            size: 2.2 * 1024 * 1024
+            filename: 'Bach Chorale',
+            url: 'https://archive.org/download/LauradenardisperformingbachChorale/BachChorale.mp3',
+            size: 2.0 * 1024 * 1024
         },
         {
-            filename: 'cello suite',
-            url: 'https://archive.org/download/CelloSuiteNo.1I.Preluderostropovich/1-01Bach_CelloSuite1InGBwv1007-1.Prelude.mp3',
-            size: 2.4 * 1024 * 1024
-        },
-        {
-            filename: 'choral',
-            url: 'https://ia902808.us.archive.org/2/items/acidplanet-audio-00352632/00352632.mp3',
-            size: 1 * 1024 * 1024
+            filename: 'Bach Two Part Invention in C minor',
+            url: 'https://ia902904.us.archive.org/7/items/BachTwoPartInventionInCMinor/Bach%20-%20Two-part%20Invention%20in%20C%20minor.mp3',
+            size: 2 * 1024 * 1024
         }
     ];
 

@@ -9,6 +9,7 @@ import ConstantQData from './constantq/ConstantQData';
 import ConstantQDataUtil, {ConstantQMessage} from './constantq/ConstantQDataUtil';
 import ConstantQ from './constantq/ConstantQ';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { MatExpansionPanel } from '@angular/material';
 
 /**
  * This is the main entry point angular component.  This component is
@@ -34,7 +35,7 @@ export class AppComponent implements OnInit {
   selectedSub: Subscription;
   title: string = undefined;
 
-  settingsExpand = true;
+  @ViewChild("expansionPanel") expansionPanel: MatExpansionPanel;
 
   minPitch : Pitch = ConstantQ.DEFAULT_MIN_FREQ;
   maxPitch : Pitch = ConstantQ.DEFAULT_MAX_FREQ;
@@ -70,6 +71,8 @@ export class AppComponent implements OnInit {
    */
   private onFinishedLoading(buff: AudioBuffer, pitchData: ConstantQData) {
     this.playback = new AudioPlayback(buff, AppComponent.MS_REFRESH);
+    this.expansionPanel.close();
+
     if (pitchData && pitchData.lowPitch && pitchData.highPitch) {
       let noteLetters = getFreqRange(
         pitchData.lowPitch.note, pitchData.lowPitch.octave, 
@@ -79,10 +82,7 @@ export class AppComponent implements OnInit {
 
       this.noteLetters = noteLetters.slice(0, noteLetters.length - 2);
     }
-      
-
-    this.settingsExpand = false;
-
+    
     if (pitchData) {
       // determine max value for graph
       const maxVal = pitchData.constQData.reduce(

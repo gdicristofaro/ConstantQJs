@@ -1,27 +1,13 @@
-# Constantqjs
+# ConstantQJs
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.8.
+In this project, someone can view all the pitches in a piece of music.  ConstantQJs utilizes Benjamin Blankertz's [algorithm](http://doc.ml.tu-berlin.de/bbci/material/publications/Bla_constQ.pdf) implementing the [Constant Q Transform](https://en.wikipedia.org/wiki/Constant-Q_transform).
 
-## Development server
+The live demo can be found [here](http://gdicristofaro.github.io/ConstantQJs/).
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## How it works
 
-## Code scaffolding
+Audio file data is imported utilizing the Web Audio API.  Then the audio data is analyzed for pitch information.  The algorithm implementation utilizes web assembly in combination with web workers to facilitate performance.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Setup and install
 
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+The project can be built with `npm install` and ran with `npm start`.  The compiled web assembly is included, however the web assembly code can be built from the C++ code using `npm buildwasm`.  
