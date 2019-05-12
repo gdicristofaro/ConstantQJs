@@ -5,7 +5,7 @@
             class="link-chip"
             color="primary" 
             selected
-            *ngFor="let item of items; trackBy: itemId" 
+            *ngFor="let item of items;" 
             (click)="onClick(item)"
         >
             {{ format(item) }}

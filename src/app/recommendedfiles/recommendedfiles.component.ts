@@ -14,7 +14,7 @@ export class RecommendedFilesComponent {
     private static ITEMS : AudioFile[] = [
         {
             filename: "C maj wav",
-            url: "/assets/audio/Cmaj.wav",
+            url: "./assets/audio/Cmaj.wav",
             size: 1.8 * 1024 * 1024
         },
         {
