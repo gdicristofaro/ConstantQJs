@@ -3,7 +3,7 @@
 In this project, someone can view all the pitches in a piece of music.  ConstantQJs utilizes Benjamin Blankertz's [algorithm](http://doc.ml.tu-berlin.de/bbci/material/publications/Bla_constQ.pdf) implementing the [Constant Q Transform](https://en.wikipedia.org/wiki/Constant-Q_transform).
 
 ## Live Demo
-The live demo can be found [here](http://gdicristofaro.github.io/ConstantQJs/).
+The live demo can be found [here](http://gdicristofaro.github.io/constantqjs/).
 
 ## How it works
 
